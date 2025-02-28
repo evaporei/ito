@@ -1,14 +1,11 @@
 #+build linux, darwin, freebsd, openbsd, netbsd, haiku
 package ito
 
-import "base:runtime"
 import "core:sys/posix"
 
 OS_Thread :: struct {
     handle: posix.pthread_t,
 }
-
-wrapper_ctx: runtime.Context
 
 wrapper_fn :: proc "c" (arg: rawptr) -> rawptr {
     context = wrapper_ctx
@@ -23,6 +20,7 @@ _os_thread_init :: proc(os_t: ^OS_Thread, fn: proc(rawptr), arg: rawptr) -> (dat
     data.fn = fn
     data.arg = arg
 
+    wrapper_ctx = context
     result := posix.pthread_create(&os_t.handle, nil, wrapper_fn, data)
     assert(result == posix.Errno.NONE)
     return

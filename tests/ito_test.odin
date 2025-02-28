@@ -3,12 +3,20 @@ package tests
 import "core:log"
 import "core:testing"
 import "core:fmt"
+import "core:strings"
 
 import ito "../"
 
 thread_fn :: proc(arg: rawptr) {
     n := cast(^u32) arg
     n^ = 42
+
+    // test allocation (will break if ctx is passed incorrectly)
+    bla := make(map[int]string)
+    defer delete(bla)
+    s := strings.clone("asenoto")
+    defer delete(s)
+    bla[5] = s
 }
 
 @(test)

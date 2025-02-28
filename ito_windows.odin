@@ -12,8 +12,6 @@ OS_Thread :: struct {
     handle: win32.HANDLE,
 }
 
-wrapper_ctx: runtime.Context
-
 wrapper_fn :: proc "c" (arg: win32.LPVOID) -> win32.DWORD {
     context = wrapper_ctx
 
