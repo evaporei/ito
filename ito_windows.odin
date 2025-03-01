@@ -17,7 +17,6 @@ wrapper_fn :: proc "stdcall" (arg: win32.LPVOID) -> win32.DWORD {
 
     data := cast(^Thread_Data) arg
     data.fn(data.arg)
-    free(data)
     return 0
 }
 
