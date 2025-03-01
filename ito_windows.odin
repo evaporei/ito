@@ -12,7 +12,7 @@ OS_Thread :: struct {
     handle: win32.HANDLE,
 }
 
-wrapper_fn :: proc "c" (arg: win32.LPVOID) -> win32.DWORD {
+wrapper_fn :: proc "stdcall" (arg: win32.LPVOID) -> win32.DWORD {
     context = wrapper_ctx
 
     data := cast(^Thread_Data) arg
@@ -21,13 +21,13 @@ wrapper_fn :: proc "c" (arg: win32.LPVOID) -> win32.DWORD {
     return 0
 }
 
-_os_thread_init :: proc(os_t: ^OS_Thread) -> (data: ^Thread_Data) {
+_os_thread_init :: proc(os_t: ^OS_Thread, fn: proc(rawptr), arg: rawptr) -> (data: ^Thread_Data) {
     data = new(Thread_Data)
     data.fn = fn
     data.arg = arg
 
     os_t.handle = win32.CreateThread(nil, 0, wrapper_fn, data, 0, &os_t.id)
-    assert(os_t.handle)
+    assert(os_t.handle != nil)
     return
 }
 
