@@ -15,15 +15,9 @@ wrapper_fn :: proc "c" (arg: rawptr) -> rawptr {
     return nil
 }
 
-_os_thread_init :: proc(os_t: ^OS_Thread, fn: proc(rawptr), arg: rawptr) -> (data: ^Thread_Data) {
-    data = new(Thread_Data)
-    data.fn = fn
-    data.arg = arg
-
-    wrapper_ctx = context
+_os_thread_init :: proc(os_t: ^OS_Thread, data: ^Thread_Data) {
     result := posix.pthread_create(&os_t.handle, nil, wrapper_fn, data)
     assert(result == posix.Errno.NONE)
-    return
 }
 
 _os_thread_join :: proc(os_t: ^OS_Thread) {

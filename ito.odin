@@ -15,7 +15,14 @@ Thread_Data :: struct {
 wrapper_ctx: runtime.Context
 
 thread_init :: proc (t: ^Thread, fn: proc(rawptr), arg: rawptr) {
-    t.data = _os_thread_init(&t.os_thread, fn, arg)
+    wrapper_ctx = context
+
+    data := new(Thread_Data)
+    data.fn = fn
+    data.arg = arg
+    t.data = data
+
+    _os_thread_init(&t.os_thread, data)
 }
 
 thread_join :: proc (t: ^Thread) {

@@ -20,14 +20,9 @@ wrapper_fn :: proc "stdcall" (arg: win32.LPVOID) -> win32.DWORD {
     return 0
 }
 
-_os_thread_init :: proc(os_t: ^OS_Thread, fn: proc(rawptr), arg: rawptr) -> (data: ^Thread_Data) {
-    data = new(Thread_Data)
-    data.fn = fn
-    data.arg = arg
-
+_os_thread_init :: proc(os_t: ^OS_Thread, data: ^Thread_Data) {
     os_t.handle = win32.CreateThread(nil, 0, wrapper_fn, data, 0, &os_t.id)
     assert(os_t.handle != nil)
-    return
 }
 
 _os_thread_join :: proc(os_t: ^OS_Thread) {
