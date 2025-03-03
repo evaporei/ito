@@ -1,8 +1,6 @@
 #+build windows
 package ito
 
-// TODO: test module properly on windows
-
 import win32 "core:sys/windows"
 
 OS_Thread :: struct {
